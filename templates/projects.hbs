@@ -1,0 +1,13 @@
+<div style="width: 100%; margin-top: 50px; margin-bottom: 20px; text-align: center;">
+	<h1>Projects</h1>
+</div>
+
+<div class="container">
+	<div class="row">
+			{{#each repositories}}
+				<div class="col-md-4">
+					{{> repository-widget }}
+				</div>
+			{{/each}}
+	</div>
+</div>

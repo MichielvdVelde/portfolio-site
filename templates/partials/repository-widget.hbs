@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-md-12" style="margin-bottom: 20px;">
+		<div style="width: 100%; min-height: 150px; border: 1px #505050 solid;">
+			<div class="head" style="background: #343343; padding: 10px; border-bottom: 1px #404040 solid; font-size: 16px; font-weight: bold;">
+				{{name}} {{#if downloads}}<span class="badge" title="npm downloads last month">{{downloads}}</span>{{/if}}
+			</div>
+			<div class="middle" style="padding: 10px; border-bottom: 1px #404040 solid; min-height: 70px; font-size: 16px; text-align: center;">
+				{{description}}
+			</div>
+			<div class="foot" style="padding: 10px; font-size: 18px;">
+				<div class="row">
+					<div class="col-md-6">
+						<a href="{{http_url}}" target="_blank" title="View on Github" style="padding: 2px;"><i class="fa fa-github"></i></a>
+						{{#if homepage}}
+							<a href="{{homepage}}" target="_blank" title="Homepage" style="padding: 2px;"><i class="fa fa-home"></i></a>
+						{{/if}}
+					</div>
+					<div class="col-md-6" style="text-align: right;">
+						<a href="/projects/{{name}}" title="More info" style="padding: 2px;"><i class="fa fa-chevron-right"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
