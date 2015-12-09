@@ -2,6 +2,9 @@
 logs
 *.log
 
+# Add cache dir
+cache
+
 # Runtime data
 pids
 *.pid
