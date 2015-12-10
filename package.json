@@ -2,17 +2,26 @@
   "name": "portfolio-site",
   "version": "1.0.0",
   "description": "Personal portfolio site",
+  "private": true,
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichielvdVelde/portfolio-site.git"
+  },
   "author": "Michiel van der Velde <michiel@michielvdvelde.nl>",
+  "bugs": {
+    "url": "https://github.com/MichielvdVelde/portfolio-site/issues"
+  },
+  "homepage": "https://github.com/MichielvdVelde/portfolio-site#readme",
   "license": "MIT",
   "dependencies": {
     "debug": "^2.2.0",
     "fs-jetpack": "^0.7.0",
-    "github-api-simple": "0.0.2",
+    "github-api-simple": "0.0.4",
     "handlebars": "^4.0.5",
     "hapi": "^11.1.2",
     "inert": "^3.2.0",

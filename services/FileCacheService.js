@@ -61,10 +61,6 @@ FileCacheService.prototype.get = function(key) {
 	});
 };
 
-FileCacheService.prototype.getAll = function() {
-	return this.get('repos.all');
-};
-
 FileCacheService.prototype.getRepository = function(name) {
 	let self = this;
 	return new Promise(function(resolve, reject) {
