@@ -18,7 +18,6 @@ let GithubApiService = function(options) {
 };
 
 GithubApiService.prototype.fetchRepositories = function(username) {
-	debug('fetchRepositories() start');
 	if(!username && !this._options.username) throw new Error('no user name given');
 	username = (username) ? username : this._options.username;
 	let options = extend(this._options, {
@@ -27,8 +26,42 @@ GithubApiService.prototype.fetchRepositories = function(username) {
 			'direction': 'desc'
 		}
 	});
-	debug('fetchRepositories() checks ok for %s', username);
 	return this._api.Repositories.getReposForUser(username, options);
+};
+
+GithubApiService.prototype.fetchRepositoryFile = function(username, name, filename) {
+	if(!username && !this._options.username && arguments.length == 2) throw new Error('no user name given');
+	if(arguments.length == 2) {
+		let tmp = name;
+		name = username;
+		filename = tmp;
+		username = false;
+	}
+	username = (username) ? username : this._options.username;
+	debug('fetchRepositoryFile() checks ok for %s %s %s', username, name, filename);
+	return this._api.Repositories.getRepoFile(username, name, filename);
+};
+
+GithubApiService.prototype.fetchRepositoryCommits = function(username, name) {
+	debug('fetchRepositoryCommits() start');
+	if(!name) {
+		name = username;
+		username = null;
+	}
+	if(!username && !this._options.username) throw new Error('no user name given');
+	username = (username) ? username : this._options.username;
+	return this._api.Repositories.getRepoCommits(username, name);
+};
+
+GithubApiService.prototype.fetchRepositoryContributors = function(username, name) {
+	debug('fetchRepositoryContributors() start');
+	if(!name) {
+		name = username;
+		username = null;
+	}
+	if(!username && !this._options.username) throw new Error('no user name given');
+	username = (username) ? username : this._options.username;
+	return this._api.Repositories.getRepoContributors(username, name);
 };
 
 exports = module.exports = GithubApiService;

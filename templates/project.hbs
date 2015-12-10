@@ -1,19 +1,111 @@
-<div style="text-align: center; padding: 10px; padding-bottom: 0px;">
-	<h1>{{repository.name}}</h1>
-</div>
-
 <div class="container">
 	<div class="row">
-		<div class="col-md-12">
-			<div style="margin-top: 20px; text-align: center;">
-				<a href="#" class="btn btn-default btn-lg">View on Github</a>
+		<div class="col-md-7">
+			<div style="margin: 15px;">
+				<h1>{{github.repository.name}}</h1>
+				<h2 style="font-size: 20px; margin-top: 0; padding-top: 0; color: #B0B0B0;">{{github.repository.description}}</h2>
+				<hr />
+
+				<div style="margin-top: 10px margin-bottom: 10px; padding: 10px; background: #303030; border: 1px #101010 solid;">
+					<div class="row">
+						<div class="col-md-2">
+							<img src="{{github.commits.0.committer.avatar_url}}" class="img-responsive img-thumbnail" />
+						</div>
+						<div class="col-md-10">
+							<p>{{github.commits.0.committer.login}} committed</p>
+							<pre style="border: 0;">{{github.commits.0.commit.message}}</pre>
+						</div>
+					</div>
+				</div>
+
+				<div style="margin-top: 30px;">
+					<p>{{{github.files.readme.markdown}}}</p>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<div style="margin: 25px; padding: 25px; background-color: #002C34;">
-				{{{readme.markdown}}}
+		<div class="col-md-5">
+			<div style="margin: 15px; padding: 0;">
+			<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Info</h1>
+				<ul style="display: block; list-style: none; margin: 0; padding: 0;">
+					{{#if npm}}
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid;">
+						<pre style="background: 0; border: 0; font-size: 16px; color: #C0C0C0; margin-top: 0; padding-top: 0;">npm install {{npm.package.name}}</pre>
+					</li>
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><strong>{{npm.package.version}}</strong> is the current npm version</p>
+					</li>
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><a href="https://npmjs.com/package/{{npm.package.name}}" target="_blank">https://npmjs.com/package/{{npm.package.name}}</p>
+					</li>
+					{{/if}}
+					{{#if github}}
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><a href="{{github.repository.html_url}}" target="_blank">{{github.repository.html_url}}</a></p>
+					</li>
+					{{/if}}
+					{{#if npm}}
+						{{#if npm.package.license}}
+						<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+							<p><strong><a href="http://opensource.org/licenses/{{npm.package.license}}" target="_blank">{{npm.package.license}}</a></strong> license</p>
+						</li>
+						{{/if}}
+					{{/if}}
+				</ul>
+				<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Stats</h1>
+				<ul style="display: block; list-style: none; margin: 0; padding: 0;">
+					{{#if npm}}
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><strong>{{npm.downloads.lastDay}}</strong> downloads in the last day</p>
+					</li>
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><strong>{{npm.downloads.lastWeek}}</strong> downloads in the last week</p>
+					</li>
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><strong>{{npm.downloads.lastMonth}}</strong> downloads in the last month</p>
+					</li>
+					{{/if}}
+					{{#if github}}
+					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
+						<p><strong><a href="{{github.repository.html_url}}/issues" target="_blank">{{#if github.repository.open_issues_count}}{{github.repository.open_issues_count}} open issue(s){{else}}No open issues{{/if}}</a></strong> on GitHub</p>
+					</li>
+					{{/if}}
+				</ul>
+				<div style="clear: both;"></div>
+				<div style="margin: 15px;">
+					<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Contributors</h1>
+						{{#each github.contributors}}
+							<div class="row">
+								<div class="col-md-3">
+									<a href="{{html_url}}" target="_blank"><img src="{{avatar_url}}" class="img-responsive img-thumbnail" title="{{login}}" /></a>
+								</div>
+							</div>
+						{{/each}}
+					<div style="clear: both;"></div>
+				</div>
+				{{#if npm.package.keywords}}
+				<div style="margin: 15px;">
+					<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Keywords</h1>
+					<ul style="margin: 0; padding: 0; list-style: none;">
+						{{#each npm.package.keywords}}
+							<li class="pull-left" style="margin-right: 10px;"><a href="https://npmjs.com/browse/keyword/{{@this}}" target="_blank">{{@this}}</a></li>
+						{{/each}}
+					</ul>
+					<div style="clear: both;"></div>
+				</div>
+				{{/if}}
+				<div style="margin: 15px;">
+					<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Dependencies</h1>
+					{{#if npm.package.dependencies}}
+					<ul style="margin: 0; padding: 0; list-style: none;">
+						{{#each npm.package.dependencies}}
+							<li class="pull-left" style="margin-right: 10px;"><a href="https://npmjs.com/package/{{@key}}" target="+_blank">{{@key}}</a></li>
+						{{/each}}
+					</ul>
+					{{else}}
+					<p>None</p>
+					{{/if}}
+				</div>
+				<div style="clear: both;"></div>
 			</div>
 		</div>
 	</div>
