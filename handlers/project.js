@@ -5,6 +5,8 @@ const marked = require('marked');
 const GithubService = require('../services/GithubService');
 const NpmDownloadsService = require('../services/NpmDownloadsService');
 
+const ta = require('time-ago');
+
 exports = module.exports = function(request, reply) {
 
 
@@ -47,14 +49,17 @@ exports = module.exports = function(request, reply) {
 																			'files': { }
 																		}
 																	};
+																	//
+																	scope.github.commits[0].commit.ago = ta().ago(scope.github.commits[0].commit.author.date);
 																	if(readme) {
 																		scope.github.files.readme = readme;
 																	}
 																	if(pkg) {
 																		scope.github.files.package = pkg;
-																		scope.npm = {
+																		if(!pkg.private)scope.npm = {
 																			'package': pkg.content
 																		};
+																		if(pkg.private) scope.npm = false;
 																	}
 																	if(downloadsLastDay || downloadsLastWeek || downloadsLastMonth) {
 																		if(!scope.npm) scope.npm = {};
@@ -64,7 +69,15 @@ exports = module.exports = function(request, reply) {
 																		if(downloadsLastMonth) scope.npm.downloads.lastMonth = downloadsLastMonth.downloads;
 																	}
 																	return reply.view('project', scope);
+																})
+																.catch(function(error) {
+																	debug('get npm downloads error: %s', error.message);
+																	return reply.view('error', { error: error });
 																});
+														})
+														.catch(function(error) {
+															debug('get npm downloads error: %s', error.message);
+															return reply.view('error', { error: error });
 														});
 											})
 											.catch(function(error) {

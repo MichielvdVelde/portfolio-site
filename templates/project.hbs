@@ -9,10 +9,10 @@
 				<div style="margin-top: 10px margin-bottom: 10px; padding: 10px; background: #303030; border: 1px #101010 solid;">
 					<div class="row">
 						<div class="col-md-2">
-							<img src="{{github.commits.0.committer.avatar_url}}" class="img-responsive img-thumbnail" />
+							<a href="{{github.commits.0.committer.html_url}}" target="_blank"><img src="{{github.commits.0.committer.avatar_url}}" class="img-responsive img-thumbnail" /></a>
 						</div>
 						<div class="col-md-10">
-							<p>{{github.commits.0.committer.login}} committed</p>
+							<p><a href="{{github.commits.0.committer.html_url}}" target="_blank">{{github.commits.0.committer.login}}</a> committed {{github.commits.0.commit.ago}}</p>
 							<pre style="border: 0;">{{github.commits.0.commit.message}}</pre>
 						</div>
 					</div>
@@ -25,11 +25,10 @@
 		</div>
 		<div class="col-md-5">
 			<div style="margin: 15px; padding: 0;">
-			<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Info</h1>
-				<ul style="display: block; list-style: none; margin: 0; padding: 0;">
+				<ul style="display: block; list-style: none; margin: 0; padding: 0; margin-top: 20px; margin-bottom: 20px;">
 					{{#if npm}}
 					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid;">
-						<pre style="background: 0; border: 0; font-size: 16px; color: #C0C0C0; margin-top: 0; padding-top: 0;">npm install {{npm.package.name}}</pre>
+						<pre style="background: 0; border: 0; font-size: 16px; color: #C0C0C0; margin-top: 0; padding-top: 0; font-size: 18px;"><i class="fa fa-download"></i> npm i {{npm.package.name}}</pre>
 					</li>
 					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
 						<p><strong>{{npm.package.version}}</strong> is the current npm version</p>
