@@ -6,20 +6,10 @@
 				<h2 style="font-size: 20px; margin-top: 0; padding-top: 0; color: #B0B0B0;">{{github.repository.description}}</h2>
 				<hr />
 
-				<div style="margin-top: 10px margin-bottom: 10px; padding: 10px; background: #303030; border: 1px #101010 solid;">
-					<div class="row">
-						<div class="col-md-2">
-							<a href="{{github.commits.0.committer.html_url}}" target="_blank"><img src="{{github.commits.0.committer.avatar_url}}" class="img-responsive img-thumbnail" /></a>
-						</div>
-						<div class="col-md-10">
-							<p><a href="{{github.commits.0.committer.html_url}}" target="_blank">{{github.commits.0.committer.login}}</a> committed {{github.commits.0.commit.ago}}</p>
-							<pre style="border: 0;">{{github.commits.0.commit.message}}</pre>
-						</div>
-					</div>
-				</div>
+				{{> commit-info}}
 
 				<div style="margin-top: 30px;">
-					<p>{{{github.files.readme.markdown}}}</p>
+					<p>{{#if github.files.readme}}{{{github.files.readme.markdown}}}{{else}}<strong>No readme available{{/if}}</p>
 				</div>
 			</div>
 		</div>
@@ -53,15 +43,7 @@
 				<h1 style="font-size: 24px; margin-top: 0; padding-top: 0; color: #B0B0B0;">Stats</h1>
 				<ul style="display: block; list-style: none; margin: 0; padding: 0;">
 					{{#if npm}}
-					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
-						<p><strong>{{npm.downloads.lastDay}}</strong> downloads in the last day</p>
-					</li>
-					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
-						<p><strong>{{npm.downloads.lastWeek}}</strong> downloads in the last week</p>
-					</li>
-					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
-						<p><strong>{{npm.downloads.lastMonth}}</strong> downloads in the last month</p>
-					</li>
+					{{> repository-downloads}}
 					{{/if}}
 					{{#if github}}
 					<li style="margin: 10px; padding: 0; padding-left: 15px; border-bottom: 1px #505050 solid; font-size: 16px;">
@@ -97,7 +79,7 @@
 					{{#if npm.package.dependencies}}
 					<ul style="margin: 0; padding: 0; list-style: none;">
 						{{#each npm.package.dependencies}}
-							<li class="pull-left" style="margin-right: 10px;"><a href="https://npmjs.com/package/{{@key}}" target="+_blank">{{@key}}</a></li>
+							<li class="pull-left" style="margin-right: 10px;"><a href="https://npmjs.com/package/{{@key}}" target="_blank">{{@key}}</a></li>
 						{{/each}}
 					</ul>
 					{{else}}

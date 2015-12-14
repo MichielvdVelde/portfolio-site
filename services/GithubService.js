@@ -23,10 +23,10 @@ GithubService.prototype.getRepositories = function(max) {
 	if(!isNaN(max) && max < 0) max = 0;
 	let self = this;
 	return new Promise(function(resolve, reject) {
-		self._cache.get('repos.all')
+		self._cache.get('repos/all')
 			.then(function(repos) {
 				if(repos) {
-					if(max > 0)
+					if(max > 0 && repos.length > max)
 						repos = repos.splice(0, max);
 					return resolve(repos);
 				}
@@ -35,7 +35,7 @@ GithubService.prototype.getRepositories = function(max) {
 				self._github.fetchRepositories()
 					.then(function(repos) {
 						debug('got from remote: %s', repos.length);
-						self._cache.set('repos.all', repos);
+						self._cache.set('repos/all', repos);
 						if(!isNaN(max) && repos.length > max)
 						 	repos = repos.splice(0, max);
 						return resolve(repos);
@@ -60,10 +60,11 @@ GithubService.prototype.getRepositoryReadme = function(name) {
 
 GithubService.prototype.getRepositoryFile = function(name, filename) {
 	let self = this;
-	let cachePath = util.format('contents.%s.%s', name, filename);
+	let cachePath = util.format('%s/content/%s', name, filename);
 	return new Promise(function(resolve, reject) {
 		self._cache.get(cachePath)
 			.then(function(content) {
+				debug('GOT cache? %s', (content) ? 'yes' : 'no');
 				if(content) {
 					// Convert content from base64
 					content.content = (new Buffer(content.content, 'base64')).toString();
@@ -80,6 +81,10 @@ GithubService.prototype.getRepositoryFile = function(name, filename) {
 				// No cache found
 				self._github.fetchRepositoryFile(name, filename)
 					.then(function(content) {
+						if(!content || content === null || content.message === 'Not Found') {
+							debug('no file on remote: %s', name);
+							return resolve(null);
+						}
 						debug('got file from remote: %s', content.name);
 						self._cache.set(cachePath, content);
 						// Convert content from base64
@@ -103,7 +108,7 @@ GithubService.prototype.getRepositoryFile = function(name, filename) {
 
 GithubService.prototype.getRepositoryCommits = function(name) {
 	let self = this;
-	let cachePath = util.format('%s.commits', name);
+	let cachePath = util.format('%s/commits', name);
 	return new Promise(function(resolve, reject) {
 		self._cache.get(cachePath)
 			.then(function(commits) {
@@ -131,7 +136,7 @@ GithubService.prototype.getRepositoryCommits = function(name) {
 
 GithubService.prototype.getRepositoryContributors = function(name) {
 	let self = this;
-	let cachePath = util.format('%s.contributors', name);
+	let cachePath = util.format('%s/contributors', name);
 	return new Promise(function(resolve, reject) {
 		self._cache.get(cachePath)
 			.then(function(contributors) {

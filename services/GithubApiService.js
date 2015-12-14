@@ -9,7 +9,8 @@ const DEFAULT_OPTIONS = {
 	'baseUrl': 'https://api.github.com',
 	'headers': {
 		'User-Agent': 'GithubApiService v0.0.1 <michiel@artofcoding.nl>'
-	}
+	},
+	'simple': false
 };
 
 let GithubApiService = function(options) {
@@ -39,7 +40,7 @@ GithubApiService.prototype.fetchRepositoryFile = function(username, name, filena
 	}
 	username = (username) ? username : this._options.username;
 	debug('fetchRepositoryFile() checks ok for %s %s %s', username, name, filename);
-	return this._api.Repositories.getRepoFile(username, name, filename);
+	return this._api.Repositories.getRepoFile(username, name, filename, this._options);
 };
 
 GithubApiService.prototype.fetchRepositoryCommits = function(username, name) {

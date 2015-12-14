@@ -21,26 +21,26 @@ NpmDownloadsService.prototype.getPoint = function(name, period) {
 	if(!period) period = 'last-day';
 	let self = this;
 	return new Promise(function(resolve, reject) {
-		let cachePath = util.format('npm.downloads.%s.%s', name, period);
+		let cachePath = util.format('%s/npm/downloads/%s', name, period);
 		debug('getPoint cache path is %s', cachePath);
 		self._cache.get(cachePath)
 			.then(function(point) {
-				if(point) {
-					if(point.error) {
-						point = {
-							'downloads': 0
-						};
-					}
+				if(point && point.error) {
+					point = {
+						'downloads': 0,
+						'unavailable': true
+					};
 					return resolve(point);
 				}
 
 				// No cache
 				self._api.getPoint(name, period)
 					.then(function(point) {
-						self._cache.set(cachePath, point);
+						self._cache.set(cachePath, point, 43200 * 1000); // 12h
 						if(point && point.error) {
 							point = {
-								'downloads': 0
+								'downloads': 0,
+								'unavailable': true
 							};
 						}
 						return resolve(point);

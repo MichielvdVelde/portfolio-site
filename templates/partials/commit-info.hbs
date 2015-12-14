@@ -1,0 +1,11 @@
+<div style="margin-top: 10px margin-bottom: 10px; padding: 10px; background: #303030; border: 1px #101010 solid;">
+	<div class="row">
+		<div class="col-md-2">
+			<a href="{{github.commits.0.committer.html_url}}" target="_blank"><img src="{{github.commits.0.committer.avatar_url}}" class="img-responsive img-thumbnail" /></a>
+		</div>
+		<div class="col-md-10">
+			<p><a href="{{github.commits.0.committer.html_url}}" target="_blank">{{github.commits.0.committer.login}}</a> committed {{github.commits.0.commit.ago}}</p>
+			<pre style="border: 0;">{{github.commits.0.commit.message}}</pre>
+		</div>
+	</div>
+</div>

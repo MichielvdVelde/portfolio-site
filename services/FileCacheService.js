@@ -12,7 +12,8 @@ const util = require('util');
 const DEFAULT_OPTIONS = {
 	'cacheDir': process.cwd() + '/cache',
 	'cacheExpire': 3600 * 1000, // 1hr
-	'prefix': 'cs'
+	'prefix': 'cs',
+	'fixCacheExpire': false
 };
 
 let FileCacheService = function(options) {
@@ -20,17 +21,15 @@ let FileCacheService = function(options) {
 	this._fs = jetpack.cwd(this._options.cacheDir);
 };
 
-FileCacheService.prototype.set = function(key, value) {
+FileCacheService.prototype.set = function(key, value, fixCacheExpire) {
 	let cacheFile = util.format('%s.%s.json', this._options.prefix, key);
 	let cacheObj = {
 		'cachedOn': (new Date()).toISOString(),
 		'content': value
 	};
-	let self = this;
-	this._fs.writeAsync(cacheFile, cacheObj)
-		.catch(function(error) {
-			debug('fail cache write to %s', path.join(self._fs.cwd(), cacheFile));
-		});
+	if(this._options.fixCacheExpire || fixCacheExpire)
+		cacheObj.cacheExpire = (fixCacheExpire) ? fixCacheExpire : this._options.cacheExpire;
+	this._fs.writeAsync(cacheFile, cacheObj);
 };
 
 FileCacheService.prototype.get = function(key) {
@@ -44,7 +43,8 @@ FileCacheService.prototype.get = function(key) {
 				}
 
 				let currentTime = (new Date()).getTime();
-				if(currentTime - cache.cachedOn >= self._options.cacheExpire) {
+				let cacheExpire = (cache.cacheExpire) ? cache.cacheExpire : self._options.cacheExpire;
+				if(currentTime - cache.cachedOn >= cacheExpire) {
 					return resolve(null);
 				}
 				return resolve(cache.content);

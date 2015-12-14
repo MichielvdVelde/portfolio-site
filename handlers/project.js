@@ -7,8 +7,14 @@ const NpmDownloadsService = require('../services/NpmDownloadsService');
 
 const ta = require('time-ago');
 
-exports = module.exports = function(request, reply) {
+// Set marked highlight options
+marked.setOptions({
+  highlight: function (code) {
+    return require('highlight.js').highlightAuto(code).value;
+  }
+});
 
+exports = module.exports = function(request, reply) {
 
 	GithubService.get().getRepositories()
 		.then(function(repos) {
@@ -25,11 +31,14 @@ exports = module.exports = function(request, reply) {
 				debug('REPO NAME %s not found', request.params.project_name);
 				throw new Error('repo ' + request.params.project_name + ' not found');
 			}
+			debug('start GET README');
 			GithubService.get().getRepositoryFile(request.params.project_name, 'README.md')
 				.then(function(readme) {
 					if(readme) readme.markdown = marked(readme.content);
+					debug('start GET package.json');
 					GithubService.get().getRepositoryFile(request.params.project_name, 'package.json')
 						.then(function(pkg) {
+							debug('finished package.json');
 							// TODO: use async to make the code cleaner
 							GithubService.get().getRepositoryCommits(request.params.project_name)
 								.then(function(commits) {
@@ -61,12 +70,12 @@ exports = module.exports = function(request, reply) {
 																		};
 																		if(pkg.private) scope.npm = false;
 																	}
-																	if(downloadsLastDay || downloadsLastWeek || downloadsLastMonth) {
+																	if(!downloadsLastDay.unavailable || !downloadsLastWeek.unavailable || !downloadsLastMonth.unavailable) {
 																		if(!scope.npm) scope.npm = {};
 																		scope.npm.downloads = {};
-																		if(downloadsLastDay) scope.npm.downloads.lastDay = downloadsLastDay.downloads;
-																		if(downloadsLastWeek) scope.npm.downloads.lastWeek = downloadsLastWeek.downloads;
-																		if(downloadsLastMonth) scope.npm.downloads.lastMonth = downloadsLastMonth.downloads;
+																		if(!downloadsLastDay.unavailable) scope.npm.downloads.lastDay = downloadsLastDay.downloads;
+																		if(!downloadsLastWeek.unavailable) scope.npm.downloads.lastWeek = downloadsLastWeek.downloads;
+																		if(!downloadsLastMonth.unavailable) scope.npm.downloads.lastMonth = downloadsLastMonth.downloads;
 																	}
 																	return reply.view('project', scope);
 																})
