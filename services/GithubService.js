@@ -20,7 +20,7 @@ let GithubService = function(github, cache, options) {
 
 GithubService.prototype.getRepositories = function(max) {
 	debug('start getRepositories()');
-	if(!isNaN(max) && max < 0) max = 0;
+	if(!isNaN(max) || max < 0) max = 0;
 	let self = this;
 	return new Promise(function(resolve, reject) {
 		self._cache.get('repos/all')
